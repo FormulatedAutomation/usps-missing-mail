@@ -17,13 +17,13 @@ CONTACT_LAST = os.environ.get('CONTACT_LAST')
 
 def get_wicksly_info(tracking_number):
     secrets = Secrets()
-    USER_NAME = secrets.get_secret("credentials")["WICKSLY_EMAIL"]
-    PASSWORD = secrets.get_secret("credentials")["WICKSLY_PASS"]
+    USER_NAME = secrets.get_secret("credentials")["PLATFORM_USERNAME"]
+    PASSWORD = secrets.get_secret("credentials")["PLATFORM_PASS"]
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
         wicksly_context = browser.newContext()
         w_page = wicksly_context.newPage()
-        w_page.goto(os.environ.get('PLAYFORM_URL'))
+        w_page.goto(os.environ.get('PLATFORM_URL'))
         w_page.fill('#id_username', USER_NAME)
         w_page.fill('#id_password', PASSWORD)
         with w_page.expect_navigation():
