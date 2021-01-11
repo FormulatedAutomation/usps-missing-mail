@@ -3,18 +3,6 @@ import os
 from playwright import sync_playwright
 from RPA.Robocloud.Secrets import Secrets
 
-ORIGIN_COMPANY = os.environ.get('ORIGIN_COMPANY')
-ORIGIN_STREET = os.environ.get('ORIGIN_STREET')
-ORIGIN_ZIP = os.environ.get('ORIGIN_ZIP')
-ORIGIN_CITY = os.environ.get('ORIGIN_CITY')
-ORIGIN_STATE = os.environ.get('ORIGIN_STATE')
-ORIGIN_PHONE = os.environ.get('ORIGIN_PHONE')
-
-CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
-CONTACT_FIRST = os.environ.get('CONTACT_FIRST')
-CONTACT_LAST = os.environ.get('CONTACT_LAST')
-
-
 def get_wicksly_info(tracking_number):
     secrets = Secrets()
     USER_NAME = secrets.get_secret("credentials")["PLATFORM_USERNAME"]
@@ -49,6 +37,17 @@ def get_wicksly_info(tracking_number):
 
 
 def run(tracking_number, shipment_info):
+    ORIGIN_COMPANY = os.environ.get('ORIGIN_COMPANY')
+    ORIGIN_STREET = os.environ.get('ORIGIN_STREET')
+    ORIGIN_ZIP = os.environ.get('ORIGIN_ZIP')
+    ORIGIN_CITY = os.environ.get('ORIGIN_CITY')
+    ORIGIN_STATE = os.environ.get('ORIGIN_STATE')
+    ORIGIN_PHONE = os.environ.get('ORIGIN_PHONE')
+
+    CONTACT_EMAIL = os.environ.get('CONTACT_EMAIL')
+    CONTACT_FIRST = os.environ.get('CONTACT_FIRST')
+    CONTACT_LAST = os.environ.get('CONTACT_LAST')
+
     with sync_playwright() as playwright:
         browser = playwright.chromium.launch(headless=False)
         context = browser.newContext()
@@ -108,10 +107,6 @@ def run(tracking_number, shipment_info):
 
         page.waitForSelector(
             "//label[span[text()='Street Address']]/following-sibling::input")
-
-        page.click(
-            "//label[span[text()='Street Address']]/following-sibling::input")
-
         page.fill(
             "//label[span[text()='Street Address']]/following-sibling::input", ORIGIN_STREET)
 
@@ -160,7 +155,8 @@ def run(tracking_number, shipment_info):
         page.click(
             "(//div[normalize-space(@role)='listitem']/div/div/div/div/div[1]/div/div/a[normalize-space(.)='--None--' and normalize-space(@role)='button'])[2]")
 
-        page.querySelectorAll(f"//a[starts-with(@title, '{shipment_info['state']}') and normalize-space(@role)='menuitemradio']")[1].click()
+        page.querySelectorAll(
+            f"//a[starts-with(@title, '{shipment_info['state']}') and normalize-space(@role)='menuitemradio']")[1].click()
         page.click(
             "//div[normalize-space(.)='ZIP Code™*']/input[normalize-space(@type)='text']")
         page.fill(
